@@ -1,0 +1,39 @@
+%{
+#include <stdio.h>
+#include "elsab-ex1.tab.h"
+extern int lineNumber = 1;
+
+%}
+%option yylineNumber
+
+IDENT [a-zA-Z_][a-zA-Z0-9_]*
+INT -?[0-9]+(E[0-9]+)?
+
+
+%%
+"int" return tINT;
+"string" return tSTRING;
+["][^"]*["] return tSTRINGVAL;
+"return" return tRETURN;
+"print" return tPRINT;
+"=" return tASSIGN;
+"("  return tLPAR;
+")"  return tRPAR;
+"%" return tMOD;
+"-" return tMINUS;
+"+" return tPLUS;
+"*" return tSTAR;
+"{" return tLBRAC;
+"}" return tRBRAC;
+";" return tSEMI;
+"/" return tDIV;
+"," return tCOMMA;
+{IDENT} {yylval.varname =  strdup(yytext);
+return tIDENT;}
+{INT} return tINTVAL;
+
+[ \t\r]
+[\n] {lineNumber++;}
+. {
+return yytext[0]; }
+%%
